@@ -264,11 +264,23 @@ function makeInportForm(device) {
         let resonance = device.parameters[1];
         let delaytime = device.parameters[3];
 
+        let alreadyFullscreen = false;
+
         document.addEventListener('touchstart', e => {
+            //first time
+            //fullscreen
+            if (document.getElementById('rnbo-root').requestFullscreen) {
+                if (!alreadyFullscreen) {
+                    document.getElementById('rnbo-root').requestFullscreen();
+                }
+            } else {
+                console.log('No fullscreen method found');
+            }
+
             // Turn the text into a list of numbers (RNBO messages must be numbers, not text)
             const values = inportText.value.split(/\s+/).map(s => parseFloat(s));
 
-            document.documentElement.style.backgroundColor = 'white';
+            document.getElementById('rnbo-root').style.backgroundColor = 'white';
             let touch = e.targetTouches[0];
             let x = touch.clientX;
             let y = touch.clientY;
@@ -285,7 +297,7 @@ function makeInportForm(device) {
         document.addEventListener('touchmove', e => {
             let x = e.targetTouches[0].clientX;
             let y = e.targetTouches[0].clientY;
-            document.documentElement.style.backgroundColor = "red";
+            //document.getElementById('rnbo-root').style.backgroundColor = 'red';
             delaytime.value = y / 800;
             resonance.value = x / 500;
             minLength.value = y / 6;
@@ -296,6 +308,11 @@ function makeInportForm(device) {
             const values = inportText.value.split(/\s+/).map(s => parseFloat(s));
             let messageEvent = new RNBO.MessageEvent(RNBO.TimeNow, inportTag, values);
             device.scheduleEvent(messageEvent);
+        })
+
+        document.addEventListener('touchend', () => {
+            document.getElementById('rnbo-root').style.backgroundColor = 'black';
+        
         })
     }
     console.log(device.parameters[1].value);
@@ -321,14 +338,6 @@ function attachOutports(device) {
         document.getElementById("rnbo-console-readout").innerText = `${ev.tag}: ${ev.payload}`;
     });
 }
-
-document.addEventListener('touchstart', e => {
-})
-
-document.addEventListener('touchend', () => {
-    document.documentElement.style.backgroundColor = 'black';
-
-})
 
 function scale(inMin, inMax, outMin, outMax, value) {
     let inRange = inMax - inMin;
