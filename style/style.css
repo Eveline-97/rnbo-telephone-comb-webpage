@@ -67,3 +67,10 @@ h2, em {
 #inport-form, #rnbo-parameter-sliders {
     display: none;
 }
+
+/*UI*/
+.line {
+    position: absolute;
+    width: 5px;
+    stroke: blue;
+}

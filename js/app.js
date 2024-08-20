@@ -96,6 +96,22 @@ async function setup() {
     // Skip if you're not using guardrails.js
     if (typeof guardrails === "function")
         guardrails();
+
+    //UI lines
+    let lineLeft = document.getElementById('line-left');
+    let lineRight = document.getElementById('line-right');
+    lineLeft.setAttribute('x1', 0);
+    lineLeft.setAttribute('y1', 0);
+    lineLeft.setAttribute('x2', window.screen.width);
+    lineLeft.setAttribute('y2', window.screen.height);
+    lineRight.setAttribute('x1', window.screen.width);
+    lineRight.setAttribute('y1', 0);
+    lineRight.setAttribute('x1', 0);
+    lineRight.setAttribute('y2', window.screen.height);
+
+    /*let svg = document.getElementById('svg');
+    svg.setAttribute('width', window.screen.width);
+    svg.setAttribute('height', window.screen.height);*/
 }
 
 function loadRNBOScript(version) {
@@ -298,9 +314,9 @@ function makeInportForm(device) {
             let x = e.targetTouches[0].clientX;
             let y = e.targetTouches[0].clientY;
             //flicker
-            document.getElementById('rnbo-root').style.backgroundColor = 'red';
+            document.getElementById('rnbo-root').style.backgroundColor = 'white';
             setInterval(function () {
-                document.getElementById('rnbo-root').style.backgroundColor = 'white'
+                document.getElementById('rnbo-root').style.backgroundColor = 'black'
             }, 500);
             delaytime.value = y / 800;
             resonance.value = x / 500;
