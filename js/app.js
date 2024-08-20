@@ -297,7 +297,11 @@ function makeInportForm(device) {
         document.addEventListener('touchmove', e => {
             let x = e.targetTouches[0].clientX;
             let y = e.targetTouches[0].clientY;
-            //document.getElementById('rnbo-root').style.backgroundColor = 'red';
+            //flicker
+            document.getElementById('rnbo-root').style.backgroundColor = 'red';
+            setInterval(function () {
+                document.getElementById('rnbo-root').style.backgroundColor = 'white'
+            }, 500);
             delaytime.value = y / 800;
             resonance.value = x / 500;
             minLength.value = y / 6;
@@ -312,7 +316,7 @@ function makeInportForm(device) {
 
         document.addEventListener('touchend', () => {
             document.getElementById('rnbo-root').style.backgroundColor = 'black';
-        
+
         })
     }
     console.log(device.parameters[1].value);
