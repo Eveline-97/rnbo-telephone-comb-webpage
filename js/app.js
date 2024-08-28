@@ -280,18 +280,29 @@ function makeInportForm(device) {
         let resonance = device.parameters[1];
         let delaytime = device.parameters[3];
 
-        let alreadyFullscreen = false;
+        let isFullscreen = false;
 
-        document.addEventListener('touchstart', e => {
-            //first time
-            //fullscreen
-            if (document.getElementById('rnbo-root').requestFullscreen) {
-                if (!alreadyFullscreen) {
-                    document.getElementById('rnbo-root').requestFullscreen();
-                }
+        function makeFullScreen() {
+            let root = document.getElementById('rnbo-root');
+            if (root.requestFullscreen) {
+                root.requestFullscreen();
+                isFullscreen = true;
+            } else if (root.webkitRequestFullScreen) {
+                root.webkitRequestFullScreen();
+                isFullscreen = true;
+            } else if (root.mozRequestFullScreen) {
+                root.mozRequestFullScreen();
+                isFullscreen = true;
+            } else if (root.webkitEnterFullScreen) {
+                root.webkitEnterFullScreen();
+                isFullscreen = true;
             } else {
                 console.log('No fullscreen method found');
             }
+        }
+
+        document.addEventListener('touchstart', e => {
+            if (!isFullscreen) makeFullScreen();
 
             // Turn the text into a list of numbers (RNBO messages must be numbers, not text)
             const values = inportText.value.split(/\s+/).map(s => parseFloat(s));
