@@ -80,15 +80,6 @@ async function setup() {
     // (Optional) Create a form to send messages to RNBO inputs
     makeInportForm(device);
 
-    // (Optional) Attach listeners to outports so you can log messages from the RNBO patcher
-    //attachOutports(device);
-
-    // (Optional) Load presets, if any
-    //loadPresets(device, patcher);
-
-    // (Optional) Connect MIDI inputs
-    //makeMIDIKeyboard(device);
-
     document.body.onclick = () => {
         context.resume();
     }
@@ -124,13 +115,6 @@ function makeSliders(device) {
     let uiElements = {};
 
     device.parameters.forEach(param => {
-        // Subpatchers also have params. If we want to expose top-level
-        // params only, the best way to determine if a parameter is top level
-        // or not is to exclude parameters with a '/' in them.
-        // You can uncomment the following line if you don't want to include subpatcher params
-
-        //if (param.id.includes("/")) return;
-
         // Create a label, an input slider and a value display
         let label = document.createElement("label");
         let slider = document.createElement("input");
@@ -184,7 +168,7 @@ function makeSliders(device) {
         })
 
         // Make the text box input control the parameter value as well
-        text.addEventListener("keydown", (ev) => {
+        /*text.addEventListener("keydown", (ev) => {
             if (ev.key === "Enter") {
                 let newValue = Number.parseFloat(text.value);
                 if (isNaN(newValue)) {
@@ -196,7 +180,7 @@ function makeSliders(device) {
                     param.value = newValue;
                 }
             }
-        });
+        });*/
 
         // Store the slider and text by name so we can access them later
         uiElements[param.id] = { slider, text };
@@ -206,7 +190,6 @@ function makeSliders(device) {
     });
 
     // Listen to parameter changes from the device
-    // Dit zou eigenlijk al genoeg moeten zijn om 
     device.parameterChangeEvent.subscribe(param => {
         if (!isDraggingSlider)
             uiElements[param.id].slider.value = param.value;
@@ -229,7 +212,6 @@ function makeInportForm(device) {
     if (inports.length === 0) {
         return;
     } else {
-        //dit verplaatst want wil geen tekst
         idiv.removeChild(document.getElementById("inport-form"));
         inports.forEach(inport => {
             const option = document.createElement("option");
@@ -298,7 +280,6 @@ function makeInportForm(device) {
             resonance.value = x / 500;
             minLength.value = y / 6;
             maxLength.value = y / 10;
-            //console.log(x, y);
 
             // Send the message event to the RNBO device
             let messageEvent = new RNBO.MessageEvent(RNBO.TimeNow, inportTag, values);
@@ -308,16 +289,18 @@ function makeInportForm(device) {
         document.addEventListener('touchmove', e => {
             let x = e.targetTouches[0].clientX;
             let y = e.targetTouches[0].clientY;
+
             //flicker
             document.getElementById('rnbo-root').style.backgroundColor = 'white';
             setInterval(function () {
                 document.getElementById('rnbo-root').style.backgroundColor = 'black'
             }, 500);
+
             delaytime.value = y / 800;
             resonance.value = x / 500;
             minLength.value = y / 6;
             maxLength.value = y / 10;
-            //console.log(x, y);
+
             // Send the message event to the RNBO device
             // Turn the text into a list of numbers (RNBO messages must be numbers, not text)
             const values = inportText.value.split(/\s+/).map(s => parseFloat(s));
@@ -327,7 +310,6 @@ function makeInportForm(device) {
 
         document.addEventListener('touchend', () => {
             document.getElementById('rnbo-root').style.backgroundColor = 'black';
-
         })
     }
     console.log(device.parameters[1].value);
@@ -352,12 +334,6 @@ function attachOutports(device) {
 
         document.getElementById("rnbo-console-readout").innerText = `${ev.tag}: ${ev.payload}`;
     });
-}
-
-function scale(inMin, inMax, outMin, outMax, value) {
-    let inRange = inMax - inMin;
-    let outRange = outMax - outMin;
-    return 0;
 }
 
 function isMobileOrTablet() {
